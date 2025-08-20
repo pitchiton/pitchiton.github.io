@@ -177,7 +177,7 @@ p.lead {
   font-size: 1.8rem;
   line-height: 1.87;
   color: #101010;
-  margin-bottom: 3.6rem;
+  margin: 3.6rem 0rem;
   text-align: center;
 }
 
@@ -454,6 +454,7 @@ img.pull-left {
   justify-content: center;
   align-items: center;
   margin-top: 3rem;
+  gap: 20px;
 }
 
 /* Winners */
@@ -521,6 +522,10 @@ img.pull-left {
   align-items: center;
   padding: 6rem 0rem;
 }
+.dropbox{
+  padding: 6rem 0rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
 
 .sponsor-intro {
   padding-bottom: 3rem;
@@ -570,12 +575,25 @@ img.pull-left {
   padding: 1.5rem 0rem;
 }
 
-footer-subscribe {
+.footer-subscribe {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
+
+.dropbox-div img {
+  display: block;
+  margin: 0 auto;
+  width: 300px;
+}
+
+.dropbox-div {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* if you also want vertical centering */
+}
+
 
 /* ------------------------------------------------------------------- 
  * tables - (_document-setup.scss)  
@@ -663,7 +681,7 @@ td:last-child {
   right: 100%;
   height: 100%;
   width: 100%;
-  background: #39b54a;
+  background: #eb250b;
 }
 
 .pace.pace-inactive {
@@ -3092,6 +3110,19 @@ footer ul a:visited {
 .winner .trophy{
   display: none;
 }
+.dropbox img{
+  width: 150px;
 }
+.youtube-video {
+  display: flex;
+  flex-direction: column;
+}
+.youtube-video iframe {
+  width: 100%;      
+  height: auto;
+  aspect-ratio: 16/9; /* keep proper rectangle */
+}
+}
+
 
 /*# sourceMappingURL=main.css.map */

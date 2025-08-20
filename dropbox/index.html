@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drop Box Location Finder</title>
+    <!-- Importing Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap" rel="stylesheet">
+    <!-- Use Tailwind CSS for a sleek, responsive design -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Phosphor Icons for the gear icon -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+    <style>
+        /* Define custom colors based on the logo's red and gold/yellow, with a Material feel */
+        :root {
+            --pitch-red: #E53935;
+            --pitch-gold: #FFC107;
+            --light-background: #921317;
+            --surface-color: #FFFFFF;
+            --dark-text: #212121;
+            --secondary-text: #757575;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-background);
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        h1, label, h3{
+            font-family: "Merriweather", sans-serif;
+            font-weight: 400;
+        }
+
+        .container {
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin-top: 2rem;
+        }
+        
+        .logo {
+            width: 120px;
+            height: auto;
+            margin: 0 auto 2rem;
+        }
+
+        /* Style the gear icon for the admin panel */
+        .admin-gear {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--secondary-text);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .admin-gear:hover {
+            transform: rotate(30deg);
+            color: var(--pitch-gold);
+        }
+
+        /* Style for modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .close-btn {
+            color: var(--secondary-text);
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: var(--pitch-red);
+            text-decoration: none;
+        }
+
+        /* Input and button styling */
+        input[type="text"],
+        input[type="password"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            border: 2px solid #E0E0E0;
+            border-radius: 0.75rem;
+            background-color: #F5F5F5;
+            color: var(--dark-text);
+            transition: border-color 0.2s ease-in-out;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--pitch-gold);
+        }
+
+        button {
+            padding: 1rem 2rem;
+            background-color: var(--pitch-red);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #B71C1C;
+            transform: translateY(-2px);
+        }
+
+        .location-info {
+            background-color: #F5F5F5;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            min-height: 100px;
+            margin-top: 1.5rem;
+            border: 1px solid #E0E0E0;
+        }
+
+        .success-message {
+            color: #4CAF50;
+            margin-top: 1rem;
+        }
+
+        .guidelines-box {
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+/* Mobile & tablet (keep it at 90% for readability) */
+@media (max-width: 1024px) {
+    .guidelines-box {
+        max-width: 90%;
+    }
+}
+
+/* Desktop (take full width) */
+@media (min-width: 1025px) {
+    .guidelines-box {
+        max-width: 90%;
+    }
+}
+
+
+        .warning-box {
+            background-color: #FEE2E2;
+            color: #991B1B;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-top: 1rem;
+            border: 1px solid #FCA5A5;
+        }
+
+        .important-note {
+            font-weight: bold;
+            color: #757575;
+        }
+
+        /* Simple animation for modals */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Custom styles for the language toggle switch */
+        .language-switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+        }
+        .language-switch-container label {
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 0.5rem;
+            color: var(--secondary-text);
+        }
+        .language-switch-container label.active {
+            color: #fff;
+        }
+        .language-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .language-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--pitch-red);
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        /* New CSS */
+        select#state-select, select#district-select, #location-display {
+            padding: 10px;
+            font-family: 'Merriweather',sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }   
+    </style>
+</head>
+<body>
+
+<img class="w-64" src="https://pitchiton.com/images/pitchiton.png" alt="Company Logo" class="logo">
+
+<div class="language-switch-container">
+    <label id="lang-label-en" class="active">EN</label>
+    <label class="language-switch">
+        <input type="checkbox" id="language-toggle">
+        <span class="slider"></span>
+    </label>
+    <label id="lang-label-ta">TA</label>
+</div>
+
+<div class="container">
+    <div class="admin-gear" id="admin-gear-icon">
+        <i class="ph-fill ph-gear"></i>
+    </div>
+    
+    <h1 class="text-3xl font-bold text-center mb-6" data-lang-key="title">Drop Box Location Finder</h1>
+    <p class="text-sm text-center text-gray-500 mb-8" data-lang-key="description">Discover drop box locations by district in Tamil Nadu.</p>
+
+    <div class="mb-4">
+        <label for="state-select" class="block text-gray-600 font-bold mb-2" data-lang-key="stateLabel">State</label>
+        <!-- The state dropdown is pre-selected and unchangeable as per the request -->
+        <select id="state-select" class="w-full" disabled>
+            <option value="tamil-nadu">Tamil Nadu</option>
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label for="district-select" class="block text-gray-600 font-bold mb-2" data-lang-key="districtLabel">District</label>
+        <select id="district-select" class="w-full">
+            <option value="">Select a District</option>
+        </select>
+    </div>
+
+    <div class="location-info">
+        <h3 class="text-xl font-bold mb-2" data-lang-key="locationDetailsTitle">Location Details</h3>
+        <p id="location-display" class="text-gray-500" data-lang-key="selectLocationPrompt">Please select a district to view location details.</p>
+    </div>
+</div>
+
+<!-- New section with submission guidelines -->
+<div id="guidelines-container" class="guidelines-box">
+</div>
+
+<!-- Login Modal -->
+<div id="login-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2 class="text-2xl font-bold text-center mb-4" data-lang-key="adminLoginTitle">Admin Login</h2>
+        <form id="login-form">
+            <label for="username" class="block text-gray-600" data-lang-key="usernameLabel">Username</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password" class="block text-gray-600" data-lang-key="passwordLabel">Password</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="w-full" data-lang-key="loginButton">Login</button>
+            <p id="login-error" class="text-red-500 text-center mt-2" style="display: none;" data-lang-key="loginError">Invalid credentials.</p>
+        </form>
+    </div>
+</div>
+
+<!-- Admin Panel Modal -->
+<div id="admin-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2 class="text-2xl font-bold text-center mb-4" data-lang-key="addLocationTitle">Add New Location</h2>
+        <form id="add-form">
+            <label for="add-district" class="block text-gray-600" data-lang-key="districtLabel">District</label>
+            <select id="add-district" class="w-full" required>
+                <option value="">Select a District</option>
+            </select>
+            <label for="add-location" class="block text-gray-600" data-lang-key="locationNameLabel">Location Name</label>
+            <input type="text" id="add-location" name="location" required>
+            <label for="add-address" class="block text-gray-600" data-lang-key="fullAddressLabel">Full Address</label>
+            <textarea id="add-address" name="address" rows="4" class="w-full p-4 mt-2 mb-4 border-2 border-gray-300 rounded-xl bg-gray-100 text-gray-800 transition-colors duration-200 focus:border-[#FFC107] focus:outline-none" required></textarea>
+            <button type="submit" class="w-full" data-lang-key="saveLocationButton">Save Location</button>
+            <p id="add-success" class="success-message text-center mt-2" style="display: none;" data-lang-key="addSuccess">Location added successfully!</p>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Embedded XML data as a string
+    const xmlDataString = `<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+    <district name="Chennai">
+        <location>
+            <name>Anna Nagar Branch</name>
+            <address>No. 123, 2nd Main Road, Anna Nagar, Chennai - 600040</address>
+        </location>
+        <location>
+            <name>T. Nagar Branch</name>
+            <address>No. 456, Usman Road, T. Nagar, Chennai - 600017</address>
+        </location>
+    </district>
+    <district name="Coimbatore">
+        <location>
+            <name>RS Puram Branch</name>
+            <address>101, B. K. Road, RS Puram, Coimbatore - 641002</address>
+        </location>
+    </district>
+    <district name="Madurai">
+        <location>
+            <name>Simmakkal Branch</name>
+            <address>50, Main Street, Simmakkal, Madurai - 625001</address>
+        </location>
+    </district>
+    <district name="Tiruchirappalli">
+        <location>
+            <name>Cantonment Branch</name>
+            <address>40, Cantonment Road, Tiruchirappalli - 620001</address>
+        </location>
+    </district>
+    <district name="Salem">
+        <location>
+            <name>Fairlands Branch</name>
+            <address>20, Fairlands Main Road, Salem - 636004</address>
+        </location>
+    </district>
+</locations>`;
+
+    // List of all districts in Tamil Nadu
+    const allDistricts = [
+        "Ariyalur", "Chengalpattu", "Chennai", "Coimbatore", "Cuddalore", "Dharmapuri",
+        "Dindigul", "Erode", "Kallakurichi", "Kanchipuram", "Kanyakumari", "Karur",
+        "Krishnagiri", "Madurai", "Mayiladuthurai", "Nagapattinam", "Namakkal",
+        "Nilgiris", "Perambalur", "Pudukkottai", "Ramanathapuram", "Ranipet", "Salem",
+        "Sivaganga", "Tenkasi", "Thanjavur", "Theni", "Thoothukudi", "Tiruchirappalli",
+        "Tirunelveli", "Tirupathur", "Tiruppur", "Tiruvallur", "Tiruvannamalai",
+        "Tiruvarur", "Vellore", "Viluppuram", "Virudhunagar"
+    ];
+
+    // Language translations
+    const translations = {
+        en: {
+            title: "Drop Box Location Finder",
+            description: "Discover drop box locations by district in Tamil Nadu.",
+            stateLabel: "State",
+            districtLabel: "District",
+            selectDistrictPrompt: "Please select a district to view location details.",
+            locationDetailsTitle: "Location Details",
+            adminLoginTitle: "Admin Login",
+            usernameLabel: "Username",
+            passwordLabel: "Password",
+            loginButton: "Login",
+            loginError: "Invalid credentials.",
+            addLocationTitle: "Add New Location",
+            locationNameLabel: "Location Name",
+            fullAddressLabel: "Full Address",
+            saveLocationButton: "Save Location",
+            addSuccess: "Location added successfully!",
+            noLocationsFound: (district) => `No drop box locations found for ${district}.`,
+            guidelinesContent: `
+                <h2 class="text-3xl font-bold text-center mb-6">Guidelines for Submitting Applications</h2>
+                <h3 class="text-xl font-bold mb-2">When submitting your application to a drop box, please follow these rules:</h3>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li>Submit only the application form. Write neatly and clearly on the form. If necessary, you may fold the form.</li>
+                    <li>If you wish to include additional documents, place them in an envelope.</li>
+                    <li>Before sealing the envelope, write your name and contact information clearly on it.</li>
+                    <li>After placing everything inside the envelope, seal it and drop it into the drop box.</li>
+                </ul>
+
+                <div class="warning-box">
+                    <p class="important-note">Attention: Do not attach any objects with the application.</p>
+                    <p class="mb-2">This drop box is for documents only. The following items should not be submitted:</p>
+                    <ul class="list-disc list-inside">
+                        <li>Products</li>
+                        <li>Samples</li>
+                        <li>Edibles</li>
+                        <li>Money</li>
+                        <li>Any other objects</li>
+                    </ul>
+                </div>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2">What to Include for the "Neengalum Agalam Kalam" Program</h3>
+                <p class="text-gray-700 mb-4">When applying for a program like this, you can include the following documents to make your application stand out:</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><b>A Brief Cover Letter:</b> In this, you can briefly write about yourself and why you want to join this program. This shows your interest and helps them get to know you.</li>
+                    <li><b>Your Resume / CV:</b> You can detail your educational qualifications, skills, and experiences here. This provides comprehensive information about you to the program organizers.</li>
+                </ul>
+                <p class="text-gray-700 mt-4">Organize your application well and make it easy to read. Best wishes for your endeavor!</p>
+            `
+        },
+        ta: {
+            title: "ட்ராப் பாக்ஸ் இருப்பிடங்களைக் கண்டறிதல்",
+            description: "தமிழ்நாட்டில் மாவட்டவாரியாக டிராப் பாக்ஸ் இருப்பிடங்களை கண்டறியவும்.",
+            stateLabel: "மாநிலம்",
+            districtLabel: "மாவட்டம்",
+            selectDistrictPrompt: "இருப்பிட விவரங்களைக் காண ஒரு மாவட்டத்தைத் தேர்ந்தெடுக்கவும்.",
+            locationDetailsTitle: "இருப்பிட விவரங்கள்",
+            adminLoginTitle: "நிர்வாகி உள்நுழைவு",
+            usernameLabel: "பயனர்பெயர்",
+            passwordLabel: "கடவுச்சொல்",
+            loginButton: "உள்நுழைவு",
+            loginError: "தவறான நற்சான்றுகள்.",
+            addLocationTitle: "புதிய இருப்பிடத்தைச் சேர்க்கவும்",
+            locationNameLabel: "இருப்பிடப் பெயர்",
+            fullAddressLabel: "முழு முகவரி",
+            saveLocationButton: "இருப்பிடத்தைச் சேமிக்கவும்",
+            addSuccess: "இருப்பிடம் வெற்றிகரமாகச் சேர்க்கப்பட்டது!",
+            noLocationsFound: (district) => `${district} மாவட்டத்திற்கு ட்ராப் பாக்ஸ் இருப்பிடங்கள் எதுவும் கண்டறியப்படவில்லை.`,
+            guidelinesContent: `
+                <h2 class="text-3xl font-bold text-center mb-6">விண்ணப்பங்களைச் சமர்ப்பிப்பதற்கான வழிகாட்டுதல்கள்</h2>
+                <h3 class="text-xl font-bold mb-2">உங்கள் விண்ணப்பத்தை ட்ராப் பாக்ஸில் சமர்ப்பிக்கும்போது, இந்த விதிகளைப் பின்பற்றுங்கள்:</h3>
+                <ul class="list-disc list-inside space-y-2 mb-4">
+                    <li>விண்ணப்பப் படிவத்தை மட்டும் சமர்ப்பிக்கவும். படிவத்தில் தெளிவாகவும், அழகாகவும் எழுதவும். தேவைப்பட்டால், நீங்கள் படிவத்தை மடித்துப் போடலாம்.</li>
+                    <li>கூடுதல் ஆவணங்களைச் சேர்க்க விரும்பினால், அவற்றை ஒரு உறையில் (envelope) வைக்கவும்.</li>
+                    <li>உறையை ஒட்டுவதற்கு முன், அதன் மேல் உங்கள் பெயர் மற்றும் தொடர்புத் தகவலைத் தெளிவாக எழுதவும்.</li>
+                    <li>எல்லாவற்றையும் உறைக்குள் வைத்த பிறகு, அதை ஒட்டி ட்ராப் பாக்ஸில் போடவும்.</li>
+                </ul>
+
+                <div class="warning-box">
+                    <p class="important-note">கவனத்திற்கு: எந்தப் பொருளையும் விண்ணப்பத்துடன் இணைக்க வேண்டாம்.</p>
+                    <p class="mb-2">இந்த ட்ராப் பாக்ஸ் ஆவணங்களுக்காக மட்டுமே. பின்வரும் பொருட்களைச் சமர்ப்பிக்கக் கூடாது:</p>
+                    <ul class="list-disc list-inside">
+                        <li>தயாரிப்புகள் (Products)</li>
+                        <li>மாதிரிகள் (Samples)</li>
+                        <li>உணவுப் பொருட்கள் (Edibles)</li>
+                        <li>பணம்</li>
+                        <li>வேறு எந்தப் பொருட்களும்</li>
+                    </ul>
+                </div>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2">"நீங்களும் ஆகலாம் கலாம்" நிகழ்ச்சிக்கு நீங்கள் சேர்க்க வேண்டியவை</h3>
+                <p class="text-gray-700 mb-4">இதுபோன்ற நிகழ்ச்சிகளுக்கு விண்ணப்பிக்கும்போது, உங்கள் விண்ணப்பத்தை சிறப்பாகக் காட்ட, நீங்கள் பின்வரும் ஆவணங்களைச் சேர்க்கலாம்:</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><b>ஒரு சுருக்கமான அறிமுகக் கடிதம் (Cover Letter):</b> இதில் உங்களைப் பற்றியும், இந்த நிகழ்ச்சியில் ஏன் சேர விரும்புகிறீர்கள் என்பதையும் சுருக்கமாக எழுதலாம். இது உங்கள் ஆர்வத்தைக் காட்டுவதுடன், உங்களைப் பற்றி அவர்களுக்குத் தெரியப்படுத்தும்.</li>
+                    <li><b>உங்கள் சுயவிவரம் (Resume / CV):</b> உங்கள் கல்வித் தகுதி, திறன்கள் மற்றும் அனுபவங்கள் பற்றி இதில் விரிவாகக் குறிப்பிடலாம். இது உங்களைப் பற்றிய முழுமையான தகவல்களை நிகழ்ச்சி ஒருங்கிணைப்பாளர்களுக்கு அளிக்கும்.</li>
+                </ul>
+                <p class="text-gray-700 mt-4">உங்கள் விண்ணப்பத்தை நன்கு ஒழுங்கமைத்து, படிக்க எளிதாக இருக்கும்படி பார்த்துக்கொள்ளுங்கள். உங்கள் முயற்சிக்கு எனது வாழ்த்துகள்!</p>
+            `
+        }
+    };
+
+    // Get DOM elements
+    const districtSelect = document.getElementById('district-select');
+    const locationDisplay = document.getElementById('location-display');
+    const adminGearIcon = document.getElementById('admin-gear-icon');
+    const loginModal = document.getElementById('login-modal');
+    const loginForm = document.getElementById('login-form');
+    const adminModal = document.getElementById('admin-modal');
+    const addForm = document.getElementById('add-form');
+    const addDistrictSelect = document.getElementById('add-district');
+    const loginError = document.getElementById('login-error');
+    const addSuccess = document.getElementById('add-success');
+    const languageToggle = document.getElementById('language-toggle');
+    const langLabelEn = document.getElementById('lang-label-en');
+    const langLabelTa = document.getElementById('lang-label-ta');
+    const guidelinesContainer = document.getElementById('guidelines-container');
+
+    // Parse the XML string into a DOM object
+    let parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(xmlDataString, "text/xml");
+
+    // Function to populate district dropdowns with all districts
+    function populateDistricts() {
+        // Clear existing options except the first one
+        districtSelect.innerHTML = `<option value="">${translations.en.selectDistrictPrompt}</option>`;
+        addDistrictSelect.innerHTML = `<option value="">${translations.en.selectDistrictPrompt}</option>`;
+
+        allDistricts.forEach(districtName => {
+            const option = document.createElement("option");
+            option.value = districtName;
+            option.textContent = districtName;
+            districtSelect.appendChild(option);
+
+            const adminOption = option.cloneNode(true);
+            addDistrictSelect.appendChild(adminOption);
+        });
+    }
+
+    // Function to update location information based on selected district
+    function updateLocationInfo() {
+        const currentLang = languageToggle.checked ? 'ta' : 'en';
+        const selectedDistrict = districtSelect.value;
+        if (!selectedDistrict) {
+            locationDisplay.textContent = translations[currentLang].selectDistrictPrompt;
+            return;
+        }
+
+        // Clear previous content
+        locationDisplay.innerHTML = "";
+
+        // Find the selected district in the XML data
+        const district = xmlDoc.querySelector(`district[name="${selectedDistrict}"]`);
+        if (district) {
+            const locations = district.getElementsByTagName("location");
+            if (locations.length > 0) {
+                // Display each location
+                for (let i = 0; i < locations.length; i++) {
+                    const locationName = locations[i].querySelector("name").textContent;
+                    const address = locations[i].querySelector("address").textContent;
+                    locationDisplay.innerHTML += `
+                        <div class="mb-4 p-4 border-l-4 border-pitch-red rounded-lg bg-gray-100 shadow-sm">
+                            <p class="font-bold text-lg">${locationName}</p>
+                            <p>${address}</p>
+                        </div>
+                    `;
+                }
+            } else {
+                locationDisplay.textContent = translations[currentLang].noLocationsFound(selectedDistrict);
+            }
+        } else {
+            locationDisplay.textContent = translations[currentLang].noLocationsFound(selectedDistrict);
+        }
+    }
+
+    // Function to add a new location to the XML document (in memory)
+    function addNewLocation(district, name, address) {
+        // Find or create the district node
+        let districtNode = xmlDoc.querySelector(`district[name="${district}"]`);
+        if (!districtNode) {
+            districtNode = xmlDoc.createElement("district");
+            districtNode.setAttribute("name", district);
+            xmlDoc.documentElement.appendChild(districtNode);
+        }
+
+        // Create the new location node
+        const locationNode = xmlDoc.createElement("location");
+        const nameNode = xmlDoc.createElement("name");
+        const addressNode = xmlDoc.createElement("address");
+
+        nameNode.textContent = name;
+        addressNode.textContent = address;
+
+        locationNode.appendChild(nameNode);
+        locationNode.appendChild(addressNode);
+        districtNode.appendChild(locationNode);
+
+        // Update the location display if the current district is the one being added to
+        if (districtSelect.value === district) {
+            updateLocationInfo();
+        }
+    }
+
+    // Function to update all text based on the selected language
+    function updateLanguage(lang) {
+        const langData = translations[lang];
+
+        // Update main text content using data attributes
+        document.querySelectorAll('[data-lang-key]').forEach(element => {
+            const key = element.getAttribute('data-lang-key');
+            if (langData[key]) {
+                element.textContent = langData[key];
+            }
+        });
+
+        // Update specific elements with special content
+        guidelinesContainer.innerHTML = langData.guidelinesContent;
+        document.getElementById('state-select').querySelector('option').textContent = 'Tamil Nadu';
+        
+        // Update the placeholder option in the dropdowns
+        const defaultOption = districtSelect.querySelector('option');
+        if (defaultOption) {
+            defaultOption.textContent = lang === 'en' ? 'Select a District' : 'ஒரு மாவட்டத்தைத் தேர்ந்தெடுக்கவும்';
+        }
+        
+        const adminDefaultOption = addDistrictSelect.querySelector('option');
+        if (adminDefaultOption) {
+            adminDefaultOption.textContent = lang === 'en' ? 'Select a District' : 'ஒரு மாவட்டத்தைத் தேர்ந்தெடுக்கவும்';
+        }
+
+        // Update the location display with the new language's prompt
+        updateLocationInfo();
+
+        // Update the active label for the language toggle
+        if (lang === 'en') {
+            langLabelEn.classList.add('active');
+            langLabelTa.classList.remove('active');
+        } else {
+            langLabelEn.classList.remove('active');
+            langLabelTa.classList.add('active');
+        }
+    }
+
+    // Event listeners
+    window.addEventListener('DOMContentLoaded', () => {
+        populateDistricts();
+        districtSelect.addEventListener('change', updateLocationInfo);
+        updateLanguage('en'); // Set initial language
+    });
+
+    // Handle language toggle change
+    languageToggle.addEventListener('change', (e) => {
+        const lang = e.target.checked ? 'ta' : 'en';
+        updateLanguage(lang);
+    });
+
+    // Handle gear icon click
+    adminGearIcon.addEventListener('click', () => {
+        loginModal.style.display = 'flex';
+    });
+
+    // Handle login form submission
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const currentLang = languageToggle.checked ? 'ta' : 'en';
+
+        // Check credentials
+        if (username === 'admin' && password === 'admin123') {
+            loginModal.style.display = 'none';
+            adminModal.style.display = 'flex';
+            loginError.style.display = 'none';
+        } else {
+            loginError.textContent = translations[currentLang].loginError;
+            loginError.style.display = 'block';
+        }
+    });
+
+    // Handle add form submission
+    addForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const district = document.getElementById('add-district').value;
+        const locationName = document.getElementById('add-location').value;
+        const address = document.getElementById('add-address').value;
+        const currentLang = languageToggle.checked ? 'ta' : 'en';
+
+        addNewLocation(district, locationName, address);
+        
+        // Reset form and show success message
+        addForm.reset();
+        addSuccess.textContent = translations[currentLang].addSuccess;
+        addSuccess.style.display = 'block';
+        setTimeout(() => {
+            addSuccess.style.display = 'none';
+            adminModal.style.display = 'none';
+        }, 2000);
+    });
+
+    // Close modals
+    document.querySelectorAll('.close-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            loginModal.style.display = 'none';
+            adminModal.style.display = 'none';
+            addSuccess.style.display = 'none';
+        });
+    });
+
+    // Close modal if user clicks outside of it
+    window.addEventListener('click', (e) => {
+        if (e.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+        if (e.target === adminModal) {
+            adminModal.style.display = 'none';
+            addSuccess.style.display = 'none';
+        }
+    });
+</script>
+</body>
+</html>
