@@ -139,6 +139,387 @@
                 font-size: 14px;
             }
         }
+
+        /* Episodes Section Styles */
+        .episodes-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .episodes-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .episodes-scroll {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 20px 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .episodes-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .episodes-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .episodes-scroll::-webkit-scrollbar-thumb {
+            background: #ff6b35;
+            border-radius: 4px;
+        }
+
+        .episodes-scroll::-webkit-scrollbar-thumb:hover {
+            background: #e55a2b;
+        }
+
+        .episode-card {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .episode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-color: #ff6b35;
+        }
+
+        .episode-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 15px;
+            line-height: 1;
+        }
+
+        .episode-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .episode-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .episode-watch-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b35, #e55a2b);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .episode-watch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .episodes-section {
+                padding: 60px 0;
+            }
+
+            .episodes-container {
+                padding: 0 15px;
+            }
+
+            .episodes-scroll {
+                gap: 15px;
+                padding: 15px 0;
+            }
+
+            .episode-card {
+                flex: 0 0 250px;
+                padding: 20px;
+            }
+
+            .episode-number {
+                font-size: 40px;
+                margin-bottom: 12px;
+            }
+
+            .episode-title {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .episode-description {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+
+            .episode-watch-btn {
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .episode-card {
+                flex: 0 0 220px;
+                padding: 18px;
+            }
+
+            .episode-number {
+                font-size: 36px;
+            }
+
+            .episode-title {
+                font-size: 16px;
+            }
+
+            .episode-description {
+                font-size: 12px;
+            }
+        }
+
+        /* Coming Soon Section Styles */
+        .coming-soon-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #ff6b35 0%, #e55a2b 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coming-soon-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="30" cy="30" r="1.5" fill="rgba(255,255,255,0.08)"/><circle cx="60" cy="20" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="50" r="1.5" fill="rgba(255,255,255,0.06)"/><circle cx="20" cy="70" r="1" fill="rgba(255,255,255,0.09)"/><circle cx="70" cy="80" r="1.5" fill="rgba(255,255,255,0.07)"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-10px) translateX(5px); }
+            50% { transform: translateY(-20px) translateX(-5px); }
+            75% { transform: translateY(-10px) translateX(5px); }
+            100% { transform: translateY(0px) translateX(0px); }
+        }
+
+        .coming-soon-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .coming-soon-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .coming-soon-subtitle {
+            font-size: 24px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-weight: 300;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .coming-soon-description {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px 20px;
+            min-width: 100px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .countdown-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .countdown-label {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .coming-soon-cta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .coming-soon-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .coming-soon-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        .coming-soon-btn i {
+            font-size: 18px;
+        }
+
+        /* Mobile Responsive for Coming Soon */
+        @media (max-width: 768px) {
+            .coming-soon-section {
+                padding: 60px 0;
+            }
+
+            .coming-soon-container {
+                padding: 0 15px;
+            }
+
+            .coming-soon-title {
+                font-size: 36px;
+                margin-bottom: 15px;
+            }
+
+            .coming-soon-subtitle {
+                font-size: 20px;
+                margin-bottom: 25px;
+            }
+
+            .coming-soon-description {
+                font-size: 16px;
+                margin-bottom: 30px;
+            }
+
+            .countdown-container {
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .countdown-item {
+                padding: 20px 15px;
+                min-width: 80px;
+            }
+
+            .countdown-number {
+                font-size: 28px;
+            }
+
+            .countdown-label {
+                font-size: 12px;
+            }
+
+            .coming-soon-cta {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .coming-soon-btn {
+                padding: 12px 25px;
+                font-size: 14px;
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .coming-soon-title {
+                font-size: 28px;
+                letter-spacing: 1px;
+            }
+
+            .coming-soon-subtitle {
+                font-size: 18px;
+            }
+
+            .coming-soon-description {
+                font-size: 14px;
+            }
+
+            .countdown-container {
+                gap: 10px;
+            }
+
+            .countdown-item {
+                padding: 15px 10px;
+                min-width: 70px;
+            }
+
+            .countdown-number {
+                font-size: 24px;
+            }
+        }
     </style>
 
     
@@ -265,6 +646,82 @@
                 <div>
                     <a class="button button-primary half-width" href="https://youtube.com/shorts/XcE_LCRl0BM?si=RNjsntXYIJHgtX6S" target="_blank">See Innovations Unfold on YouTube</a>
                 </div>
+        </div>
+
+        <!-- Episodes Section -->
+        <div class="row episodes-section">
+            <h1 class="intro-header" data-aos="fade-up">Watch All Episodes</h1>
+            <div class="episodes-container">
+                <div class="episodes-scroll">
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">01</div>
+                        <div class="episode-title">Episode 1</div>
+                        <a href="https://youtu.be/FAMyzwWJ54A" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">02</div>
+                        <div class="episode-title">Episode 2</div>
+                        <a href="https://youtu.be/584uwuUwJuc" class="episode-watch-btn">Watch Now</a>
+                    </div>
+
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">03</div>
+                        <div class="episode-title">Episode 3</div>
+                        <a href="https://youtu.be/YddFbNu8Mq8" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">Comming Soon</div>
+                        <div class="episode-title"></div>
+                    </div>
+                    <!--
+                   
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">04</div>
+                        <div class="episode-title">Episode 4</div>
+                        <div class="episode-description">Tech Breakthroughs</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">05</div>
+                        <div class="episode-title">Episode 5</div>
+                        <div class="episode-description">Creative Solutions</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">06</div>
+                        <div class="episode-title">Episode 6</div>
+                        <div class="episode-description">Innovation Showcase</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">07</div>
+                        <div class="episode-title">Episode 7</div>
+                        <div class="episode-description">Finalists Revealed</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">08</div>
+                        <div class="episode-title">Episode 8</div>
+                        <div class="episode-description">Semi-Finals</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">09</div>
+                        <div class="episode-title">Episode 9</div>
+                        <div class="episode-description">Grand Finale</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+                    <div class="episode-card" data-aos="fade-up">
+                        <div class="episode-number">10</div>
+                        <div class="episode-title">Episode 10</div>
+                        <div class="episode-description">Winner Announcement</div>
+                        <a href="#" class="episode-watch-btn">Watch Now</a>
+                    </div>
+
+                    -->
+                </div>
+            </div>
         </div>
         
 
